@@ -7,10 +7,12 @@ import com.prodigy.ipaddresses.to.IpAddressFilter;
 import com.prodigy.ipaddresses.to.IpSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional(readOnly = true)
 public class IpAddressServiceImpl implements IpAddressService {
 
     private IpAddressDao ipAddressDao;
@@ -21,20 +23,32 @@ public class IpAddressServiceImpl implements IpAddressService {
     }
 
     @Override
+    @Transactional
     public IpAddress save(IpAddress ipAddress) {
 
-        if (ipAddress.isNew()) {
-            return this.ipAddressDao.save(ipAddress);
-        }
 
         LogChanges logChanges = new LogChanges();
         List<LogChangesDetails> logDetails = new ArrayList<>();
 
         logChanges.setDatetime(new Date());
         logChanges.setUserName(LoggedUser.getName());
-        logChanges.setIpAddress_id(ipAddress.getId());
         logChanges.setIpAddress(ipAddress.getIpAddress());
 
+        if (ipAddress.isNew()) {
+            logChanges.setIpAddress_id(0);
+            LogChangesDetails detail = new LogChangesDetails("NewIpAddress", "", ipAddress.getIpAddress());
+            logDetails.add(detail);
+            detail.setChanges(logChanges);
+            logChanges.setListDetails(logDetails);
+
+            this.ipAddressDao.save(ipAddress);
+
+            this.ipAddressDao.saveLogChanges(logChanges);
+
+            return ipAddress;
+        }
+
+        logChanges.setIpAddress_id(ipAddress.getId());
         IpAddress oldIpAddress = this.ipAddressDao.get(ipAddress.getId());
 
         if (!oldIpAddress.getIpAddress().equals(ipAddress.getIpAddress())) {
@@ -83,16 +97,21 @@ public class IpAddressServiceImpl implements IpAddressService {
                 logChangesDetails.setChanges(logChanges);
             }
             logChanges.setListDetails(logDetails);
+
+            this.ipAddressDao.save(ipAddress);
+
             this.ipAddressDao.saveLogChanges(logChanges);
+
         }
 
 
-        return this.ipAddressDao.save(ipAddress);
+        return ipAddress;
 
 
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) {
 
         LogChanges logChanges = new LogChanges();
@@ -110,9 +129,13 @@ public class IpAddressServiceImpl implements IpAddressService {
         logDetails.add(logChangesDetails);
         logChanges.setListDetails(logDetails);
 
-        this.ipAddressDao.saveLogChanges(logChanges);
 
-        return this.ipAddressDao.delete(id);
+        if(this.ipAddressDao.delete(id)){
+            this.ipAddressDao.saveLogChanges(logChanges);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -166,6 +189,7 @@ public class IpAddressServiceImpl implements IpAddressService {
     }
 
     @Override
+    @Transactional
     public User addUser(User user) {
         return this.ipAddressDao.addUser(user);
     }

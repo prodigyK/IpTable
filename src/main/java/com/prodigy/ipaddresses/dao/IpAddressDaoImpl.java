@@ -15,14 +15,12 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 
 @Repository
-@Transactional(readOnly = true)
 public class IpAddressDaoImpl implements IpAddressDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public IpAddress save(IpAddress ipAddress) {
 
         if (ipAddress.isNew()) {
@@ -35,7 +33,6 @@ public class IpAddressDaoImpl implements IpAddressDao {
     }
 
     @Override
-    @Transactional
     public boolean delete(int id) {
         return entityManager.createQuery("DELETE FROM IpAddress ip WHERE ip.id=?1")
                 .setParameter(1, id)
@@ -135,7 +132,6 @@ public class IpAddressDaoImpl implements IpAddressDao {
     }
 
     @Override
-    @Transactional
     public User addUser(User user) {
 
         if(this.getUserByName(user.getLogin()) == null){
@@ -146,7 +142,6 @@ public class IpAddressDaoImpl implements IpAddressDao {
     }
 
     @Override
-    @Transactional
     public LogChanges saveLogChanges(LogChanges log) {
 
         entityManager.persist(log);

@@ -48,7 +48,7 @@
 
                     </td>
                     <td style="padding: 5px">
-                        <button type="submit" class="btn">Filter</button>
+                        <button type="submit" class="btn"><b>Filter</b></button>
 
                     </td>
                 </tr>
@@ -149,7 +149,7 @@
 
                     </td>
                     <td>${ipAddress.compName}</td>
-                    <td>${ipAddress.userName}</td>
+                    <td><b>${ipAddress.userName}</b></td>
                     <td>${ipAddress.deviceType.name}</td>
                     <td>${ipAddress.department.name}</td>
                     <td>${ipAddress.comments}</td>
