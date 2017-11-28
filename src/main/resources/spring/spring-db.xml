@@ -22,7 +22,14 @@
           p:driverClassName="com.mysql.jdbc.Driver"
           p:url="${database.url}"
           p:username="${database.username}"
-          p:password="${database.password}"/>
+          p:password="${database.password}"
+          p:initialSize="5"
+          p:maxIdle="5"
+          p:minIdle="1"
+          p:testWhileIdle="true"
+          p:testOnBorrow="true"
+          p:validationQuery="SELECT 1"
+          />
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"

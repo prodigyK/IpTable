@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>Ip Addresses</name>
-    <url>http://reports.com/ipaddresses</url>
+    <url>http://iptable.loc</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -185,7 +185,7 @@
     </dependencies>
 
     <build>
-        <finalName>Ip Addresses</finalName>
+        <finalName>ROOT</finalName>
         <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
@@ -203,6 +203,19 @@
                 <version>2.20</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>https://iptable.loc/manager/text</url>
+                    <path>/</path>
+                    <server>TomcatServer</server>
+                    <httpsPort>443</httpsPort>
+                    <keystoreFile>C:/SslCerts/iptable.cer</keystoreFile>
+                    <update>true</update>
                 </configuration>
             </plugin>
         </plugins>

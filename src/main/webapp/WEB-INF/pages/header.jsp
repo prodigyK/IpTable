@@ -10,7 +10,7 @@
 
             <ul class="nav navbar-nav">
                 <spring:url value="/ip/main" var="main"/>
-                <li class="active"><a href="${main}">Home</a></li>
+                <li class="active"><a href="${main}">Office</a></li>
             </ul>
             <ul class="nav navbar-nav">
                 <spring:url var="showFilter" value="/ip/showFilter"/>
